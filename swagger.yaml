@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   version: "1.0"
   title: Error404 Invoice API
-  description: .
+  description: http://52.3.112.135:3000/
 externalDocs:
   description: Go to project confluence page
   url: https://unswcse.atlassian.net/wiki/spaces/Error404No/pages/924549135/Project+Home
