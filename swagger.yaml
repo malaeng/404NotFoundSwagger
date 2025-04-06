@@ -17,6 +17,15 @@ tags:
     description: Operations about invoices
   - name: users
     description: Operations about users
+    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  # Optional, just for documentation purposes
+security:
+  - bearerAuth: []
 paths:
   /sellers:
     get:
@@ -918,6 +927,7 @@ paths:
       summary: Registers a new user
       description: |
         Registers a new user with the provided `email` and `password`. The user data will be saved in the database.
+      security: []
       requestBody:
         required: true
         content:
@@ -954,6 +964,7 @@ paths:
       summary: Logs in an existing user
       description: |
         Logs in an existing user with the provided `email` and `password`. If the credentials are valid, a session or token will be generated.
+      security: []
       requestBody:
         required: true
         content:
@@ -991,7 +1002,7 @@ paths:
       - users
       summary: Deletes a user account
       description: |
-        Deletes a user account using the provided `username` and `password`. The user will be removed from the database.
+        Deletes a user account. The user will be removed from the database.
       responses:
         '200':
           description: User successfully deleted
@@ -1009,3 +1020,4 @@ paths:
           description: User not found, cannot delete
         '500':
           description: Internal server error during user deletion
+          
