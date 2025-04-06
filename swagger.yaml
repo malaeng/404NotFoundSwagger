@@ -72,7 +72,6 @@ paths:
       summary: Creates a seller
       description: Creates a validated JSON string of a seller with the necessary details
       requestBody:
-        description: Create a new pet in the store
         content:
           application/json:
             schema:
@@ -97,32 +96,35 @@ paths:
               schema:
                 type: object
                 required:
+                - id
                 - name
                 - address
                 - abn
                 properties:
+                  id:
+                    type: string
                   name:
                     type: string
                   address:
                     type: string
                   abn:
-                    type: number         
+                    type: number    
         '404':
           description: Seller not found
         '400':
           description: field is invalid (could be no name or invalid abn or invalid address)
         '500':
           description: Internal Server Error
-  /sellers/edit/{abn}:
+  /sellers/edit/{id}:
     patch:
       tags:
         - sellers
       summary: Edits a saved sellers details
       description: Edits a saved sellers details
       parameters:
-        - name: abn
+        - name: id
           in: path
-          description: Australian Business Number (ABN) of the seller
+          description: Seller Id of the seller to edit
           required: true
           schema:
             type: string
@@ -135,11 +137,14 @@ paths:
               required:
                 - name
                 - address
+                - abn
               properties:
                 name:
                   type: string
                 address:
                   type: string
+                abn:
+                  type: number
       responses:
         '200':
           description: successful operation
@@ -192,6 +197,74 @@ paths:
           description: Seller with ABN does not exist
         500:
           description: Internal server error
+  /sellers/logo:
+    post:
+      tags:
+        - sellers
+      summary: Uploads a logo for a seller
+      description: Takes a PNG or JPEG file and uploads it as the logo for a seller
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload (must be PNG or JPEG)
+                seller_id:
+                  type: string
+                  description: ID of the seller to upload logo for
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Seller not found or unauthorized
+        '400':
+          description: field is invalid (Missing seller_id, no file uploaded, incorrect file format)
+        '500':
+          description: Internal Server Error
+    get:
+      tags:
+        - sellers
+      summary: Gets the logo of a seller
+      description: Reterns the logo of a given seller
+      parameters:
+      - name: seller_id
+        in: query
+        required: true
+        schema:
+          type: number
+        description: Seller Id of the seller to get logo of
+      responses:
+        '200':
+          description: Successfully returned the image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Seller not found or unauthorized
+        '400':
+          description: field is invalid (Missing or invalidseller_id)
+        '500':
+          description: Internal Server Error
   /customers/create:
     post:
       tags:
